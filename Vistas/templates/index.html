@@ -6,6 +6,9 @@
     <title>Formulario Albums</title>
 </head>
 <body>
+    {% for mesg in get_flashed_messages() %}
+    <h3>{{ mesg }}</h3>
+    {% endfor %}
     <form action="/guardarAlbum" method="POST">
         <label for="txtTitulo">Título:</label>
         <input type="text" name="txtTitulo">
