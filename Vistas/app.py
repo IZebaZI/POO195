@@ -12,7 +12,13 @@ mysql = MySQL(app)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute('select * from albums')
+        listaAlbums = cursor.fetchall()
+        return render_template('index.html', albums = listaAlbums)
+    except Exception as e:
+        print(e)
 
 @app.route('/guardarAlbum', methods=['POST'])
 def guardarAlbum():

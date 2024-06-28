@@ -21,5 +21,34 @@
         <br><br>
         <button type="submit">Guardar Album</button>
     </form>
+    <br>
+    
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <td>ID:</td>
+                    <td>Album:</td>
+                    <td>Artista:</td>
+                    <td>Año:</td>
+                    <td>Operaciones:</td>
+                </tr>
+            </thead>
+            <tbody>
+                {%for album in albums%}
+                <tr>
+                    <td>{{album.0}}</td>
+                    <td>{{album.1}}</td>
+                    <td>{{album.2}}</td>
+                    <td>{{album.3}}</td>
+                    <td>
+                        <a href="">|Editar|</a>
+                        <a href="">|Borrar|</a>
+                    </td>
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>
