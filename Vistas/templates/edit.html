@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Album</title>
+</head>
+<body>
+    {% for mesg in get_flashed_messages() %}
+    <h3>{{ mesg }}</h3>
+    {% endfor %}
+    <form action="/actualizarAlbum/{{album.0}}" method="POST">
+        <label for="txtTitulo">Título:</label>
+        <input type="text" name="txtTitulo" value="{{album.1}}">
+        <br><br>
+        <label for="txtArtista">Artista:</label>
+        <input type="text" name="txtArtista" value="{{album.2}}">
+        <br><br>
+        <label for="intYear">Año:</label>
+        <input type="number" name="intYear" value="{{album.3}}">
+        <br><br>
+        <button type="submit">Guardar Cambios</button>
+    </form>
+</body>
+</html>

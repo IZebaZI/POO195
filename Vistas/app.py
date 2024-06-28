@@ -35,6 +35,37 @@ def guardarAlbum():
         flash("Album Guardado Exitosamente")
         return redirect(url_for('index'))
 
+@app.route('/editar/<id>')
+def editarAlbum(id):
+    cursor = mysql.connection.cursor()
+    cursor.execute('select * from albums where id = %s', [id])
+    albumEdit = cursor.fetchone()
+    return render_template('edit.html', album = albumEdit)
+
+@app.route('/actualizarAlbum/<id>', methods=['POST'])
+def actualizarAlbum(id):
+    if request.method == 'POST':
+        titulo = request.form['txtTitulo']
+        artista = request.form['txtArtista']
+        year = request.form['intYear']
+        print(titulo, artista, year)
+        
+        cursor = mysql.connection.cursor()
+        cursor.execute('update albums set titulo=%s, artista=%s, año=%s where id=%s', (titulo, artista, year, id))
+        mysql.connection.commit()
+        
+        flash("Album Editado Exitosamente")
+        return redirect(url_for('index'))
+
+@app.route('/eliminar/<id>')
+def eliminarAlbum(id):
+    cursor = mysql.connection.cursor()
+    cursor.execute('delete from albums where id=%s', [id])
+    mysql.connection.commit()
+    
+    flash("Album Eliminado Exitosamente")
+    return redirect(url_for('index'))
+
 @app.errorhandler(404)
 def paginaerror(e):
     return 'Revisa tu sintaxis: No encontré la página especificada'
