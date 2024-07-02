@@ -1,57 +1,68 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario Albums</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-</head>
-<body>
+{%extends "template.html" %}
+
+{%block body%}
     {% for mesg in get_flashed_messages() %}
-    <h3>{{ mesg }}</h3>
-    {% endfor %}
-    <form action="/guardarAlbum" method="POST">
-        <label for="txtTitulo">Título:</label>
-        <input type="text" name="txtTitulo">
-        <br><br>
-        <label for="txtArtista">Artista:</label>
-        <input type="text" name="txtArtista">
-        <br><br>
-        <label for="intYear">Año:</label>
-        <input type="number" name="intYear">
-        <br><br>
-        <button type="submit">Guardar Album</button>
-    </form>
-    <br>
-    
-    <div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <td>ID:</td>
-                    <td>Album:</td>
-                    <td>Artista:</td>
-                    <td>Año:</td>
-                    <td>Operaciones:</td>
-                </tr>
-            </thead>
-            <tbody>
-                {%for album in albums%}
-                <tr>
-                    <td>{{album.0}}</td>
-                    <td>{{album.1}}</td>
-                    <td>{{album.2}}</td>
-                    <td>{{album.3}}</td>
-                    <td>
-                        <a class="btn btn-info btn-sm" href="/editar/{{album.0}}">|Editar|</a>
-                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{album.0}}">|Eliminar|</button>
-                        {%include 'modal.html'%}
-                    </td>
-                </tr>
-                {%endfor%}
-            </tbody>
-        </table>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>{{mesg}}</strong> 
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-</body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-</html>
+    {% endfor %}
+
+    <div class="text-center mt-3 mb-3 display-5 text-danger">
+        GESTIÓN DE ÁLBUMS
+    </div>
+
+    <!-- INICIO DE ROW -->
+    <div class="row">
+        <!-- INICIO PRIMER COLUMNA -->
+        <div class="col-md-5 ps-5">
+            <!-- FORM -->
+            <form action="/guardarAlbum" method="POST">
+                <label for="txtTitulo">Título:</label>
+                <input type="text" name="txtTitulo">
+                <br><br>
+                <label for="txtArtista">Artista:</label>
+                <input type="text" name="txtArtista">
+                <br><br>
+                <label for="intYear">Año:</label>
+                <input type="number" name="intYear">
+                <br><br>
+                <button type="submit">Guardar Album</button>
+            </form>
+        </div>
+
+        <!-- INICIO SEGUNDA COLUMNA -->
+        <div class="col-md-7">
+            <!-- TABLE -->
+            <div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>ID:</td>
+                            <td>Album:</td>
+                            <td>Artista:</td>
+                            <td>Año:</td>
+                            <td>Operaciones:</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for album in albums%}
+                        <tr>
+                            <td>{{album.0}}</td>
+                            <td>{{album.1}}</td>
+                            <td>{{album.2}}</td>
+                            <td>{{album.3}}</td>
+                            <td>
+                                <a class="btn btn-info btn-sm" href="/editar/{{album.0}}">|Editar|</a>
+                                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{album.0}}">|Eliminar|</button>
+                                {%include 'modal.html'%}
+                            </td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- FINAL DE ROW -->
+{%endblock%}
