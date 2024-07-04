@@ -2,10 +2,18 @@
 
 {%block body%}
     {% for mesg in get_flashed_messages() %}
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <!-- <div class="alert alert-success alert-dismissible fade show" role="alert">
         <strong>{{mesg}}</strong> 
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+    </div> -->
+
+    <script>
+        Swal.fire({
+            title: 'Correcto',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    </script>
     {% endfor %}
 
     <div class="text-center mt-3 mb-3 display-5 text-danger">
@@ -14,54 +22,57 @@
 
     <!-- INICIO DE ROW -->
     <div class="row">
-        <!-- INICIO PRIMER COLUMNA -->
-        <div class="col-md-5 ps-5">
-            <!-- FORM -->
+        <div class="col-md-5">
             <form action="/guardarAlbum" method="POST">
-                <label for="txtTitulo">Título:</label>
-                <input type="text" name="txtTitulo">
-                <br><br>
-                <label for="txtArtista">Artista:</label>
-                <input type="text" name="txtArtista">
-                <br><br>
-                <label for="intYear">Año:</label>
-                <input type="number" name="intYear">
-                <br><br>
-                <button type="submit">Guardar Album</button>
+                <div class="container">
+                <!-- INICIO PRIMER COLUMNA -->
+                        <!-- FORM -->
+                        <div class="mb-3">
+                            <label for="txtTitulo">Título:</label>
+                            <input type="text" name="txtTitulo" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtArtista">Artista:</label>
+                            <input type="text" name="txtArtista" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="intYear">Año:</label>
+                            <input type="number" name="intYear" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-info mt-3 mb-5">Guardar Album</button>
+                </div>
             </form>
         </div>
 
         <!-- INICIO SEGUNDA COLUMNA -->
-        <div class="col-md-7">
+        <div class="container col-md-6">
             <!-- TABLE -->
-            <div>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <td>ID:</td>
-                            <td>Album:</td>
-                            <td>Artista:</td>
-                            <td>Año:</td>
-                            <td>Operaciones:</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {%for album in albums%}
-                        <tr>
-                            <td>{{album.0}}</td>
-                            <td>{{album.1}}</td>
-                            <td>{{album.2}}</td>
-                            <td>{{album.3}}</td>
-                            <td>
-                                <a class="btn btn-info btn-sm" href="/editar/{{album.0}}">|Editar|</a>
-                                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{album.0}}">|Eliminar|</button>
-                                {%include 'modal.html'%}
-                            </td>
-                        </tr>
-                        {%endfor%}
-                    </tbody>
-                </table>
-            </div>
+            <table class="table table-info table-striped">
+                <thead>
+                    <tr>
+                        <td>ID:</td>
+                        <td>Album:</td>
+                        <td>Artista:</td>
+                        <td>Año:</td>
+                        <td>Operaciones:</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for album in albums%}
+                    <tr>
+                        <td>{{album.0}}</td>
+                        <td>{{album.1}}</td>
+                        <td>{{album.2}}</td>
+                        <td>{{album.3}}</td>
+                        <td>
+                            <a class="btn btn-info btn-sm" href="/editar/{{album.0}}">|Editar|</a>
+                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{album.0}}">|Eliminar|</button>
+                            {%include 'modal.html'%}
+                        </td>
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
         </div>
     </div>
     <!-- FINAL DE ROW -->

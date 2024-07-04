@@ -5,17 +5,21 @@
 {% for mesg in get_flashed_messages() %}
 <h3>{{ mesg }}</h3>
 {% endfor %}
-<form action="/actualizarAlbum/{{album.0}}" method="POST">
-    <label for="txtTitulo">Título:</label>
-    <input type="text" name="txtTitulo" value="{{album.1}}">
-    <br><br>
-    <label for="txtArtista">Artista:</label>
-    <input type="text" name="txtArtista" value="{{album.2}}">
-    <br><br>
-    <label for="intYear">Año:</label>
-    <input type="number" name="intYear" value="{{album.3}}">
-    <br><br>
-    <button type="submit">Guardar Cambios</button>
-</form>
+<div class="d-flex justify content-center">
+    <div class="container col-md-5 text-center">
+        <div class="text-center mb-3 display-5 text-danger">
+            EDITAR ALBUM
+        </div>
+        <form action="/actualizarAlbum/{{album.0}}" method="POST">
+            <label for="txtTitulo" class="form-label">Título:</label>
+            <input type="text" name="txtTitulo" value="{{album.1}}" class="form-control mb-3">
+            <label for="txtArtista" class="form-label">Artista:</label>
+            <input type="text" name="txtArtista" value="{{album.2}}" class="form-control mb-3">
+            <label for="intYear" class="form-label">Año:</label>
+            <input type="number" name="intYear" value="{{album.3}}" class="form-control mb-3">
+            <button type="submit" class="btn btn-warning mb-3">Guardar Cambios</button>
+        </form>
+    </div>
+</div>
 
 {%endblock%}
