@@ -23,21 +23,25 @@
     <!-- INICIO DE ROW -->
     <div class="row">
         <div class="col-md-5">
-            <form action="/guardarAlbum" method="POST">
+            <form action="/guardarAlbum" method="POST" enctype="multipart/form-data">
                 <div class="container">
                 <!-- INICIO PRIMER COLUMNA -->
                         <!-- FORM -->
                         <div class="mb-3">
                             <label for="txtTitulo">Título:</label>
-                            <input type="text" name="txtTitulo" class="form-control">
+                            <input type="text" name="txtTitulo" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label for="txtArtista">Artista:</label>
-                            <input type="text" name="txtArtista" class="form-control">
+                            <input type="text" name="txtArtista" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label for="intYear">Año:</label>
-                            <input type="number" name="intYear" class="form-control">
+                            <input type="number" name="intYear" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="imgPortada">Portada:</label>
+                            <input type="file" name="imgPortada" class="form-control" required accept="image/jpeg, image/png" >
                         </div>
                         <button type="submit" class="btn btn-info mt-3 mb-5">Guardar Album</button>
                 </div>
@@ -54,16 +58,25 @@
                         <td>Album:</td>
                         <td>Artista:</td>
                         <td>Año:</td>
+                        <td>Portada:</td>
                         <td>Operaciones:</td>
                     </tr>
                 </thead>
                 <tbody>
+                    {%set path = 'static/docs/'%}
                     {%for album in albums%}
                     <tr>
                         <td>{{album.0}}</td>
                         <td>{{album.1}}</td>
                         <td>{{album.2}}</td>
                         <td>{{album.3}}</td>
+                        {%for portada in portadas%}
+                            {%if album.0|string in portada%}
+                                <td>
+                                    <img src="{{path}}{{portada}}" class="mr-3" alt="{{portada}}" style="width: 100px; height: 100px;">
+                                </td>
+                            {%endif%}
+                        {%endfor%}
                         <td>
                             <a class="btn btn-info btn-sm" href="/editar/{{album.0}}">|Editar|</a>
                             <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{album.0}}">|Eliminar|</button>

@@ -1,5 +1,10 @@
 from flask import Flask, request, render_template, jsonify, url_for, redirect, flash
 from flask_mysqldb import MySQL
+from werkzeug.utils import secure_filename
+import os
+from os import path
+from os import remove
+
 
 app = Flask(__name__)
 app.config['MYSQL_HOST'] = 'localhost'
@@ -10,13 +15,18 @@ app.secret_key = 'your_secret_key'
 
 mysql = MySQL(app)
 
+def listaArchivos():
+    urlFiles = 'Vistas/static/docs'
+    return (os.listdir(urlFiles))
+
 @app.route('/')
 def index():
     try:
         cursor = mysql.connection.cursor()
         cursor.execute('select * from albums')
         listaAlbums = cursor.fetchall()
-        return render_template('index.html', albums = listaAlbums)
+        listaPortadas = listaArchivos()
+        return render_template('index.html', albums = listaAlbums, portadas = listaPortadas)
     except Exception as e:
         print(e)
 
@@ -26,11 +36,26 @@ def guardarAlbum():
         titulo = request.form['txtTitulo']
         artista = request.form['txtArtista']
         year = request.form['intYear']
-        print(titulo, artista, year)
         
         cursor = mysql.connection.cursor()
         cursor.execute('insert into albums(titulo, artista, año) values(%s, %s, %s)', (titulo, artista, year))
         mysql.connection.commit()
+        cursor.close()
+
+        cursor = mysql.connection.cursor()
+        cursor.execute('select id from albums where titulo=%s and artista=%s and año=%s', (titulo, artista, year))
+        id = cursor.fetchone()
+        id = str(id[0])
+        cursor.close()
+
+        portada = request.files['imgPortada']
+        basepath = path.dirname(__file__)
+        filename = secure_filename(portada.filename)
+        extension = path.splitext(filename)[1]
+        nuevoNombre = id + extension
+        uploadpath = path.join(basepath, 'static/docs', nuevoNombre)
+        portada.save(uploadpath)
+
         
         flash("Album Guardado Exitosamente")
         return redirect(url_for('index'))
@@ -40,7 +65,8 @@ def editarAlbum(id):
     cursor = mysql.connection.cursor()
     cursor.execute('select * from albums where id = %s', [id])
     albumEdit = cursor.fetchone()
-    return render_template('edit.html', album = albumEdit)
+    listaPortadas = listaArchivos()
+    return render_template('edit.html', album = albumEdit, portadas = listaPortadas)
 
 @app.route('/actualizarAlbum/<id>', methods=['POST'])
 def actualizarAlbum(id):
@@ -54,6 +80,24 @@ def actualizarAlbum(id):
         cursor.execute('update albums set titulo=%s, artista=%s, año=%s where id=%s', (titulo, artista, year, id))
         mysql.connection.commit()
         
+        portada = request.files['imgPortada']
+        if portada.filename != '':
+            basepath = path.dirname(__file__)
+            filename = secure_filename(portada.filename)
+            extension = path.splitext(filename)[1]
+            nuevoNombre = id + extension
+            uploadpath = path.join(basepath, 'static/docs', nuevoNombre)
+
+            for ext in ['.jpg', '.png']:
+                if ext == extension:
+                    continue
+                fotoAnterior = id + ext
+                pathAnterior = path.join(basepath, 'static/docs', fotoAnterior)
+                if path.exists(pathAnterior):
+                    remove(pathAnterior)
+
+            portada.save(uploadpath)
+
         flash("Album Editado Exitosamente")
         return redirect(url_for('index'))
 
@@ -62,6 +106,14 @@ def eliminarAlbum(id):
     cursor = mysql.connection.cursor()
     cursor.execute('delete from albums where id=%s', [id])
     mysql.connection.commit()
+    cursor.close()
+
+    for ext in ['.jpg', '.png']:
+        fotoAnterior = id + ext
+        basepath = path.dirname(__file__)
+        pathAnterior = path.join(basepath, 'static/docs', fotoAnterior)
+        if path.exists(pathAnterior):
+            remove(pathAnterior)
     
     flash("Album Eliminado Exitosamente")
     return redirect(url_for('index'))
